@@ -8,7 +8,7 @@ import {flashSwapInterfaceV3} from "../src/flashSwapInterfaceV3.sol";
 
 contract flashSwapScript is Script {
     function setUp() public {}
-    //forge script script/flashSwapV3BSCSwap.s.sol:flashSwapV3BSCSwap  --rpc-url https://polygon-mainnet.g.alchemy.com/v2/cl9SoL4xYQzBCmt9TnU1M8pZLx8tC8UD --broadcast 
+    //forge script script/flashSwapV3BSCSwap.s.sol:flashSwapV3BSCSwap  --rpc-url https://polygon-bor.publicnode.com --broadcast 
     function run() public {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
