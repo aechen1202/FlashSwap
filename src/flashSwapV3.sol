@@ -213,15 +213,19 @@ contract flashSwapV3 is Ownable {
                 ? (sqrtPriceX96_0, sqrtPriceX96_1)
                 : (sqrtPriceX96_1, sqrtPriceX96_0);
             
-            if (price0 > price1) {
+             if (price0 < price1) {
                 (lowerPool, higherPool) = (pool0, pool1);
+                console.log('Borrow from pool:', lowerPool);
+                console.log('Sell to pool:', higherPool);
+                console.log("lowerPool sqrtPriceX96",price0);
+                console.log("higherPool sqrtPriceX96",price1);
             } else {
                 (lowerPool, higherPool) = (pool1, pool0);
+                console.log('Borrow from pool:', lowerPool);
+                console.log('Sell to pool:', higherPool);
+                console.log("lowerPool sqrtPriceX96",price1);
+                console.log("higherPool sqrtPriceX96",price0);
             }
-            console.log('Borrow from pool:', lowerPool);
-            console.log('Sell to pool:', higherPool);
-            console.log("lowerPool sqrtPriceX96",price0);
-            console.log("higherPool sqrtPriceX96",price1);
         }
 
     //flash swap
