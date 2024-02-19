@@ -208,23 +208,24 @@ contract flashSwapV3 is Ownable {
             (uint160 sqrtPriceX96_0,,,,,,) = IUniswapV3Pool(pool0).slot0();
             (uint160 sqrtPriceX96_1,,,,,,) = IUniswapV3Pool(pool1).slot0();
              // Calculate the price denominated in quote asset token
-            (uint160 price0, uint160 price1) =
+            (uint160 sqrtPrice0, uint160 sqrtPrice1) =
                 baseTokenSmaller
-                ? (sqrtPriceX96_0, sqrtPriceX96_1)
-                : (sqrtPriceX96_1, sqrtPriceX96_0);
-            
-             if (price0 < price1) {
+                ? (10 **36/((((sqrtPriceX96_0*10 **18)/2**96)**2)/10 **18), (10 **36/((((sqrtPriceX96_1*10 **18)/2**96)**2)/10 **18)))
+                : (((sqrtPriceX96_0 * 10 **18)/2**96)**2, ((sqrtPriceX96_1 * 10 **18)/2**96)**2);
+           
+            if (sqrtPrice0 < sqrtPrice1) {
                 (lowerPool, higherPool) = (pool0, pool1);
                 console.log('Borrow from pool:', lowerPool);
                 console.log('Sell to pool:', higherPool);
-                console.log("lowerPool sqrtPriceX96",price0);
-                console.log("higherPool sqrtPriceX96",price1);
-            } else {
+                console.log("lowerPool Price",sqrtPrice0);
+                console.log("higherPool Price",sqrtPrice1);
+            }
+            else {
                 (lowerPool, higherPool) = (pool1, pool0);
                 console.log('Borrow from pool:', lowerPool);
                 console.log('Sell to pool:', higherPool);
-                console.log("lowerPool sqrtPriceX96",price1);
-                console.log("higherPool sqrtPriceX96",price0);
+                console.log("lowerPool sqrtPriceX96",sqrtPrice1);
+                console.log("higherPool sqrtPriceX96",sqrtPrice0);
             }
         }
 
@@ -242,7 +243,8 @@ contract flashSwapV3 is Ownable {
         OrderedReserves memory orderedReserves;
         if(borrowAmount==0){
             //use reserves to calculate borrow sell pools and get reserve from tokens
-            (info.lowerPool, info.higherPool, orderedReserves) = getOrderedReserves(pool0, pool1, info.baseTokenSmaller);
+            (,, orderedReserves) = getOrderedReserves(pool0, pool1, info.baseTokenSmaller);
+            (info.lowerPool, info.higherPool) = getBorrowSellPools(pool0, pool1, info.baseTokenSmaller);
         }
         else{
              //use sqrtPriceX96 to calculate borrow and sell pools
